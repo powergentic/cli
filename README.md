@@ -1,4 +1,4 @@
-# PGA — Powergentic Agent
+# Powergentic CLI (`pga`)
 
 An open-source AI agent CLI tool that provides GitHub Copilot CLI-like functionality with configurable LLM backends. Built with .NET 10 and C#.
 

@@ -1,6 +1,6 @@
-# PGA (Powergentic Agent) Documentation
+# Powergentic CLI Documentation
 
-**PGA** is an open-source, AI-powered coding assistant for the command line. It provides GitHub Copilot CLI-like functionality with configurable LLM backends, a customizable agent system, and built-in developer tools.
+**Powergentic CLI** (`pga`) is an open-source, AI-powered coding assistant for the command line. It provides GitHub Copilot CLI-like functionality with configurable LLM backends, a customizable agent system, and built-in developer tools.
 
 ## Table of Contents
 

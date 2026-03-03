@@ -98,7 +98,7 @@ You'll see:
 ╔═══════════════════════════════════╗
 ║           P G A                   ║
 ╚═══════════════════════════════════╝
-Powergentic Agent — AI-powered coding assistant
+Powergentic CLI — AI-powered coding assistant
 
 Using LLM profile: my-gpt4
 

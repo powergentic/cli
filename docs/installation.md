@@ -101,7 +101,7 @@ Expected output:
 
 ```
 Description:
-  PGA (Powergentic Agent) — AI-powered coding assistant CLI
+  PGA (Powergentic CLI) — AI-powered coding assistant CLI
 
 Usage:
   pga [command] [options]

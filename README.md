@@ -2,6 +2,8 @@
 
 An open-source AI agent CLI tool that provides GitHub Copilot CLI-like functionality with configurable LLM backends. Built with .NET 10 and C#.
 
+**_This project is in early stages of development and is a work in progress._**
+
 ## Features
 
 - 🤖 **Interactive Chat Mode** — Conversational AI assistant with full tool access
@@ -302,3 +304,7 @@ Full documentation is available in the [docs/](docs/index.md) directory:
 ## License
 
 MIT License — see [LICENSE](LICENSE) for details.
+
+## Maintained By
+
+The **Powergentic CLI**** project is maintained by [Chris Pietschmann](https://pietschsoft.com?utm_source=github&utm_medium=powergenticcli), founder of [Build5Nines](https://build5nines.com?utm_source=github&utm_medium=powergenticcli), Microsoft MVP, HashiCorp Ambassador, IBM Champion, and Microsoft Certified Trainer (MCT).

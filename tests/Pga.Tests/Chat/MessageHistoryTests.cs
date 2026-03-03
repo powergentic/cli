@@ -97,7 +97,7 @@ public class MessageHistoryTests
         var list1 = history.ToList();
         var list2 = history.ToList();
 
-        Assert.Equal(1, list1.Count);
+        Assert.Single(list1);
         Assert.NotSame(list1, list2); // Should be a new list each time
     }
 

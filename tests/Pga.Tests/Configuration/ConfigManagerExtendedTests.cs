@@ -5,7 +5,6 @@ namespace Pga.Tests.Configuration;
 public class ConfigManagerExtendedTests
 {
     private string _tempConfigDir = null!;
-    private string _originalHome = null!;
 
     private string SetupTempConfigEnvironment()
     {
@@ -28,7 +27,7 @@ public class ConfigManagerExtendedTests
         var dir = ConfigManager.ConfigDirectory;
 
         Assert.Contains(".powergentic", dir);
-        Assert.True(dir.StartsWith(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)));
+        Assert.StartsWith(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), dir);
     }
 
     [Fact]

@@ -1,0 +1,12 @@
+/Users/chris/Documents/PowergenticAgent/src/Pga.Core/obj/Debug/net10.0/Pga.Core.csproj.AssemblyReference.cache
+/Users/chris/Documents/PowergenticAgent/src/Pga.Core/obj/Debug/net10.0/Pga.Core.GeneratedMSBuildEditorConfig.editorconfig
+/Users/chris/Documents/PowergenticAgent/src/Pga.Core/obj/Debug/net10.0/Pga.Core.AssemblyInfoInputs.cache
+/Users/chris/Documents/PowergenticAgent/src/Pga.Core/obj/Debug/net10.0/Pga.Core.AssemblyInfo.cs
+/Users/chris/Documents/PowergenticAgent/src/Pga.Core/obj/Debug/net10.0/Pga.Core.csproj.CoreCompileInputs.cache
+/Users/chris/Documents/PowergenticAgent/src/Pga.Core/bin/Debug/net10.0/Pga.Core.deps.json
+/Users/chris/Documents/PowergenticAgent/src/Pga.Core/bin/Debug/net10.0/Pga.Core.dll
+/Users/chris/Documents/PowergenticAgent/src/Pga.Core/bin/Debug/net10.0/Pga.Core.pdb
+/Users/chris/Documents/PowergenticAgent/src/Pga.Core/obj/Debug/net10.0/Pga.Core.dll
+/Users/chris/Documents/PowergenticAgent/src/Pga.Core/obj/Debug/net10.0/refint/Pga.Core.dll
+/Users/chris/Documents/PowergenticAgent/src/Pga.Core/obj/Debug/net10.0/Pga.Core.pdb
+/Users/chris/Documents/PowergenticAgent/src/Pga.Core/obj/Debug/net10.0/ref/Pga.Core.dll

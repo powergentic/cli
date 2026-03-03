@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <RootNamespace>Pga</RootNamespace>
+    <Authors>Build5Nines LLC</Authors>
+    <Company>Build5Nines LLC</Company>
+    <Product>Powergentic Agent</Product>
+    <Copyright>Copyright (c) Build5Nines LLC. All rights reserved.</Copyright>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+</Project>

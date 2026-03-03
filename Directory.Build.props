@@ -8,7 +8,7 @@
     <RootNamespace>Pga</RootNamespace>
     <Authors>Build5Nines LLC</Authors>
     <Company>Build5Nines LLC</Company>
-    <Product>Powergentic Agent</Product>
+    <Product>Powergentic CLI</Product>
     <Copyright>Copyright (c) Build5Nines LLC. All rights reserved.</Copyright>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>

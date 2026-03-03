@@ -1,9 +1,0 @@
-<Solution>
-  <Folder Name="/src/">
-    <Project Path="src/Pga.Cli/Pga.Cli.csproj" />
-    <Project Path="src/Pga.Core/Pga.Core.csproj" />
-  </Folder>
-  <Folder Name="/tests/">
-    <Project Path="tests/Pga.Tests/Pga.Tests.csproj" />
-  </Folder>
-</Solution>

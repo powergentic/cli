@@ -15,7 +15,7 @@ public sealed partial class WebFetchTool : IAgentTool
         Timeout = TimeSpan.FromSeconds(30),
         DefaultRequestHeaders =
         {
-            { "User-Agent", "PGA/1.0 (Powergentic Agent)" }
+            { "User-Agent", "PGA/1.0 (Powergentic CLI)" }
         }
     };
 

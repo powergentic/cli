@@ -310,7 +310,7 @@ public sealed class ChatOrchestrator
     private static string BuildBaseSystemPrompt()
     {
         return """
-            You are PGA (Powergentic Agent), an expert AI coding assistant running as a CLI tool.
+            You are Powergentic CLI, an expert AI coding assistant running as a CLI tool.
             You help users with software development tasks by understanding their codebase and making changes.
 
             You have access to tools for:

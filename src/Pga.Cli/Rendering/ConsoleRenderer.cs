@@ -14,7 +14,7 @@ public static class ConsoleRenderer
     {
         AnsiConsole.Write(new FigletText("PGA")
             .Color(Color.Blue));
-        AnsiConsole.MarkupLine("[dim]Powergentic Agent — AI-powered CLI assistant[/]");
+        AnsiConsole.MarkupLine("[dim]Powergentic CLI — AI-powered CLI assistant[/]");
         AnsiConsole.MarkupLine("[dim]Type your message, or /help for commands. /exit to quit.[/]");
         AnsiConsole.WriteLine();
     }

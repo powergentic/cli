@@ -52,8 +52,8 @@ public static class ChatCommand
     /// <summary>
     /// Default entry point when no subcommand is specified.
     /// </summary>
-    public static Task RunDefaultChatAsync() =>
-        RunInteractiveChat(Environment.CurrentDirectory, null, null);
+    public static Task RunDefaultChatAsync(string? projectPath = null) =>
+        RunInteractiveChat(projectPath ?? Environment.CurrentDirectory, null, null);
 
     private static async Task RunInteractiveChat(string projectPath, string? agentName, string? profileName)
     {

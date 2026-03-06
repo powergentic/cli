@@ -4,7 +4,9 @@ using System.Text.Json.Serialization;
 namespace Pga.Core.Configuration;
 
 /// <summary>
-/// Manages reading/writing the PGA configuration at ~/.powergentic/config.json
+/// Manages reading/writing the PGA configuration.
+/// Looks for .powergentic/config.json in the project directory first,
+/// then falls back to ~/.powergentic/config.json.
 /// </summary>
 public sealed class ConfigManager
 {
@@ -15,14 +17,43 @@ public sealed class ConfigManager
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
 
-    public static string ConfigDirectory =>
+    private readonly string? _projectPath;
+
+    public ConfigManager(string? projectPath = null)
+    {
+        _projectPath = projectPath;
+    }
+
+    public static string GlobalConfigDirectory =>
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".powergentic");
 
-    public static string ConfigFilePath =>
-        Path.Combine(ConfigDirectory, "config.json");
+    public static string GlobalConfigFilePath =>
+        Path.Combine(GlobalConfigDirectory, "config.json");
+
+    /// <summary>
+    /// Returns the local (project-level) config file path, if a project path was provided.
+    /// </summary>
+    public string? LocalConfigFilePath =>
+        _projectPath != null
+            ? Path.Combine(Path.GetFullPath(_projectPath), ".powergentic", "config.json")
+            : null;
+
+    /// <summary>
+    /// Resolves which config file path to use: local first, then global.
+    /// </summary>
+    public string ConfigFilePath =>
+        (LocalConfigFilePath != null && File.Exists(LocalConfigFilePath))
+            ? LocalConfigFilePath
+            : GlobalConfigFilePath;
+
+    /// <summary>
+    /// Returns the directory containing the resolved config file.
+    /// </summary>
+    public string ConfigDirectory => Path.GetDirectoryName(ConfigFilePath)!;
 
     /// <summary>
     /// Loads the configuration from disk, or returns a default config if none exists.
+    /// Checks the project-level .powergentic/config.json first, then ~/.powergentic/config.json.
     /// </summary>
     public PgaConfiguration Load()
     {
@@ -36,6 +67,7 @@ public sealed class ConfigManager
 
     /// <summary>
     /// Saves the configuration to disk.
+    /// Writes to the project-level config if it exists, otherwise to the global config.
     /// </summary>
     public void Save(PgaConfiguration config)
     {
@@ -46,15 +78,19 @@ public sealed class ConfigManager
 
     /// <summary>
     /// Initializes the configuration file with defaults if it doesn't exist.
+    /// Creates at the global (~/.powergentic/) location.
     /// Returns true if a new config was created.
     /// </summary>
     public bool Initialize()
     {
-        if (File.Exists(ConfigFilePath))
+        if (File.Exists(GlobalConfigFilePath))
             return false;
 
+        // Always initialize at the global location
+        Directory.CreateDirectory(GlobalConfigDirectory);
         var config = CreateDefaultConfig();
-        Save(config);
+        var json = JsonSerializer.Serialize(config, JsonOptions);
+        File.WriteAllText(GlobalConfigFilePath, json);
         return true;
     }
 

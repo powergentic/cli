@@ -24,7 +24,7 @@ public class ConfigManagerExtendedTests
     [Fact]
     public void ConfigDirectory_IsInUserProfile()
     {
-        var dir = ConfigManager.ConfigDirectory;
+        var dir = ConfigManager.GlobalConfigDirectory;
 
         Assert.Contains(".powergentic", dir);
         Assert.StartsWith(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), dir);
@@ -33,7 +33,7 @@ public class ConfigManagerExtendedTests
     [Fact]
     public void ConfigFilePath_IsConfigJson()
     {
-        var path = ConfigManager.ConfigFilePath;
+        var path = ConfigManager.GlobalConfigFilePath;
 
         Assert.EndsWith("config.json", path);
         Assert.Contains(".powergentic", path);

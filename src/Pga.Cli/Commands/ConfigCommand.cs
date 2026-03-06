@@ -34,12 +34,12 @@ public static class ConfigCommand
             var manager = new ConfigManager();
             if (manager.Initialize())
             {
-                ConsoleRenderer.RenderSuccess($"Configuration created at {ConfigManager.ConfigFilePath}");
+                ConsoleRenderer.RenderSuccess($"Configuration created at {ConfigManager.GlobalConfigFilePath}");
                 ConsoleRenderer.RenderInfo("Edit this file to add your LLM provider credentials.");
             }
             else
             {
-                ConsoleRenderer.RenderInfo($"Configuration already exists at {ConfigManager.ConfigFilePath}");
+                ConsoleRenderer.RenderInfo($"Configuration already exists at {ConfigManager.GlobalConfigFilePath}");
             }
         });
 
@@ -59,7 +59,7 @@ public static class ConfigCommand
             tree.Style = new Style(Color.Blue);
 
             var generalNode = tree.AddNode("[bold]General[/]");
-            generalNode.AddNode($"Config path: {ConfigManager.ConfigFilePath}");
+            generalNode.AddNode($"Config path: {manager.ConfigFilePath}");
             generalNode.AddNode($"Default profile: {config.DefaultProfile}");
             generalNode.AddNode($"Tool safety: {config.ToolSafety.Mode}");
             generalNode.AddNode($"Stream responses: {config.Ui.StreamResponses}");

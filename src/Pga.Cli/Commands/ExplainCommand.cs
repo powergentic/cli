@@ -51,7 +51,7 @@ public static class ExplainCommand
     private static async Task RunExplain(string text, string projectPath, string? profileName)
     {
         projectPath = Path.GetFullPath(projectPath);
-        var configManager = new ConfigManager();
+        var configManager = new ConfigManager(projectPath);
 
         var errors = configManager.Validate();
         if (errors.Count > 0)

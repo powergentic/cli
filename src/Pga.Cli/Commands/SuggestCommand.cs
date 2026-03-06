@@ -60,7 +60,7 @@ public static class SuggestCommand
     private static async Task RunSuggest(string text, string projectPath, string? profileName, string shell)
     {
         projectPath = Path.GetFullPath(projectPath);
-        var configManager = new ConfigManager();
+        var configManager = new ConfigManager(projectPath);
 
         var errors = configManager.Validate();
         if (errors.Count > 0)

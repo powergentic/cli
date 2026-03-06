@@ -58,7 +58,7 @@ public static class ChatCommand
     private static async Task RunInteractiveChat(string projectPath, string? agentName, string? profileName)
     {
         projectPath = Path.GetFullPath(projectPath);
-        var configManager = new ConfigManager();
+        var configManager = new ConfigManager(projectPath);
 
         // Validate configuration
         var errors = configManager.Validate();

@@ -1,0 +1,16 @@
+{
+  "version": "1.0",
+  "defaultProfile": "default",
+  "profiles": {
+    "default": {
+      "provider": "ollama",
+      "displayName": "Ollama Gemma3 4B",
+      "ollamaHost": "http://localhost:11434",
+      "ollamaModel": "gemma3:4b"
+    }
+  },
+  "ui": {
+    "showToolCalls": true,
+    "streamResponses": true
+  }
+}

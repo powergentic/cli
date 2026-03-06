@@ -86,7 +86,7 @@ public static class ChatCommand
 
         var resolved = configManager.ResolveProfile(profileName, agentName != null ? agents.GetByName(agentName)?.Profile : null);
         var activeProfile = resolved?.Name ?? "default";
-        ConsoleRenderer.RenderInfo($"Using LLM profile: {activeProfile} ({resolved?.Provider ?? "unknown"} - {resolved?.DisplayName ?? "unknown"})");
+        ConsoleRenderer.RenderInfo($"Using LLM profile: {activeProfile} ({resolved?.Profile.Provider ?? "unknown"} - {resolved?.Profile.DisplayName ?? "unknown"})");
         Console.WriteLine();
 
         // Create orchestrator

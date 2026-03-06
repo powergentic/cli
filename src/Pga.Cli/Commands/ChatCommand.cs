@@ -1,4 +1,5 @@
 using System.CommandLine;
+using System.ComponentModel;
 using Pga.Cli.Rendering;
 using Pga.Core.Agents;
 using Pga.Core.Chat;
@@ -85,7 +86,7 @@ public static class ChatCommand
 
         var resolved = configManager.ResolveProfile(profileName, agentName != null ? agents.GetByName(agentName)?.Profile : null);
         var activeProfile = resolved?.Name ?? "default";
-        ConsoleRenderer.RenderInfo($"Using LLM profile: {activeProfile}");
+        ConsoleRenderer.RenderInfo($"Using LLM profile: {activeProfile} ({resolved?.Provider ?? "unknown"} - {resolved?.DisplayName ?? "unknown"})");
         Console.WriteLine();
 
         // Create orchestrator

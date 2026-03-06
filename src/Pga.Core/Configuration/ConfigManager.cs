@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Pga.Core.Configuration;
 
@@ -10,13 +9,6 @@ namespace Pga.Core.Configuration;
 /// </summary>
 public sealed class ConfigManager
 {
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        WriteIndented = true,
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-    };
-
     private readonly string? _projectPath;
 
     public ConfigManager(string? projectPath = null)
@@ -61,7 +53,7 @@ public sealed class ConfigManager
             return CreateDefaultConfig();
 
         var json = File.ReadAllText(ConfigFilePath);
-        return JsonSerializer.Deserialize<PgaConfiguration>(json, JsonOptions)
+        return JsonSerializer.Deserialize(json, PgaJsonContext.Default.PgaConfiguration)
                ?? CreateDefaultConfig();
     }
 
@@ -72,7 +64,7 @@ public sealed class ConfigManager
     public void Save(PgaConfiguration config)
     {
         Directory.CreateDirectory(ConfigDirectory);
-        var json = JsonSerializer.Serialize(config, JsonOptions);
+        var json = JsonSerializer.Serialize(config, PgaJsonContext.Default.PgaConfiguration);
         File.WriteAllText(ConfigFilePath, json);
     }
 
@@ -89,7 +81,7 @@ public sealed class ConfigManager
         // Always initialize at the global location
         Directory.CreateDirectory(GlobalConfigDirectory);
         var config = CreateDefaultConfig();
-        var json = JsonSerializer.Serialize(config, JsonOptions);
+        var json = JsonSerializer.Serialize(config, PgaJsonContext.Default.PgaConfiguration);
         File.WriteAllText(GlobalConfigFilePath, json);
         return true;
     }

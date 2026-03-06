@@ -4,9 +4,9 @@
   "profiles": {
     "default": {
       "provider": "ollama",
-      "displayName": "Ollama Gemma3 4B",
+      "displayName": "Ollama Qwen 2.5 7B",
       "ollamaHost": "http://localhost:11434",
-      "ollamaModel": "gemma3:4b"
+      "ollamaModel": "qwen2.5:7b"
     }
   },
   "ui": {

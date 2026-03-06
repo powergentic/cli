@@ -8,6 +8,8 @@
     <SelfContained>true</SelfContained>
     <PublishTrimmed>true</PublishTrimmed>
     <InvariantGlobalization>false</InvariantGlobalization>
+    <!-- Required: third-party libs (OllamaSharp, Azure.AI.OpenAI, Microsoft.Extensions.AI) use reflection-based JSON serialization -->
+    <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>
 
   <ItemGroup>

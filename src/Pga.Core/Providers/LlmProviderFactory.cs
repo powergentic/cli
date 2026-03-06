@@ -69,6 +69,9 @@ public static class LlmProviderFactory
             throw new InvalidOperationException("Ollama model name is required.");
 
         var uri = new Uri(profile.OllamaHost);
-        return new OllamaSharp.OllamaApiClient(uri, profile.OllamaModel);
+        var ollamaClient = new OllamaSharp.OllamaApiClient(uri, profile.OllamaModel);
+
+        // Wrap with schema sanitizer to fix nullable type arrays that Ollama doesn't support
+        return new OllamaToolSchemaSanitizer(ollamaClient);
     }
 }

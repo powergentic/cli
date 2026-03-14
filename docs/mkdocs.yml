@@ -7,8 +7,8 @@ theme:
   name: material
   custom_dir: overrides
   language: en
-  # favicon: images/favicon.png
-  # logo: images/logo.png
+  favicon: images/powergentic-48x48.jpg
+  logo: images/powergentic-48x48.jpg
   icon:
     repo: fontawesome/brands/github
   features:

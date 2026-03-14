@@ -8,7 +8,7 @@ using Pga.Core.Configuration;
 namespace Pga.Cli.Commands;
 
 /// <summary>
-/// Interactive chat REPL command - the primary mode of PGA.
+/// Interactive chat command - the primary mode of PGA.
 /// </summary>
 public static class ChatCommand
 {
@@ -105,7 +105,7 @@ public static class ChatCommand
 
         orchestrator.OnToolApprovalNeeded += ConsoleRenderer.PromptToolApproval;
 
-        // Main REPL loop
+        // Main Interactice / REPL loop
         while (true)
         {
             var input = ConsoleRenderer.Prompt();

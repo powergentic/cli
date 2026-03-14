@@ -38,7 +38,7 @@ pga init                         # Scaffold AGENTS.md and agents/ in a project
 
 <div class="grid cards" markdown>
 
--   :material-chat-processing:{ .lg .middle } __Interactive Chat REPL__
+-   :material-chat-processing:{ .lg .middle } __Interactive Chat__
 
     ---
 

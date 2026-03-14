@@ -45,7 +45,7 @@ The core library containing all business logic. Has no dependency on the CLI or 
 
 ### Pga.Cli
 
-The console application. References `Pga.Core` and adds CLI-specific concerns: command parsing, interactive REPL, and rich terminal rendering.
+The console application. References `Pga.Core` and adds CLI-specific concerns: command parsing, interactive chat, and rich terminal rendering.
 
 **Additional dependencies:**
 - `System.CommandLine` — CLI argument parsing and command routing

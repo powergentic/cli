@@ -30,7 +30,7 @@ pga init                   # Scaffold AGENTS.md and agents/ in a project
 
 ## Key Features
 
-- **Interactive chat REPL** — Multi-turn conversations with full tool access
+- **Interactive chat** — Multi-turn conversations with full tool access
 - **Single-shot commands** — `explain` and `suggest` for quick answers
 - **Agent system** — Define project-specific AI behaviors with `AGENTS.md` and `*.agent.md` files, following the GitHub Copilot agent convention
 - **Scoped agents** — Agents that only apply to specific directories in a monorepo

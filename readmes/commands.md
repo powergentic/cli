@@ -18,7 +18,7 @@ pga
 
 ## `pga chat`
 
-Start an interactive chat REPL (Read-Eval-Print Loop) with the AI agent.
+Start an interactive chat with the AI agent.
 
 ```bash
 pga chat [options]
@@ -74,7 +74,7 @@ Inside a chat session, the following slash commands are available:
 2. Discovers agents from the project directory (`AGENTS.md`, `agents/*.agent.md`, etc.)
 3. Builds a system prompt from global + agent-specific instructions
 4. Creates a chat session with the resolved LLM profile
-5. Enters a REPL loop: your input → LLM → tool calls (if any) → response
+5. Enters a interactive chat loop: your input → LLM → tool calls (if any) → response
 6. Tool calls are automatically executed (with safety approvals as configured)
 7. The conversation history is maintained for the duration of the session
 

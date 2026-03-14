@@ -1,0 +1,163 @@
+site_name: Powergentic CLI
+site_url: https://cli.powergentic.com
+site_author: Powergentic
+site_description: AI-powered assistant for the command line — configurable LLM backends, customizable agents, and built-in developer tools.
+
+theme:
+  name: material
+  custom_dir: overrides
+  language: en
+  # favicon: images/favicon.png
+  # logo: images/logo.png
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - content.action.edit
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - navigation.expand
+    - navigation.footer
+    - navigation.tabs
+    - navigation.path
+    - navigation.indexes
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - toc.follow
+    - toc.integrate
+
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/link
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: deep purple
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/weather-night
+        name: Switch to system preference
+
+repo_name: powergentic/cli
+repo_url: https://github.com/powergentic/cli
+edit_uri: edit/main/docs/docs/
+
+copyright: "&copy; 2026 Build5Nines LLC"
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      auto_title: true
+      linenums: true
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+
+plugins:
+  - search:
+      lang:
+        - en
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/powergentic
+
+nav:
+  - Home:
+      - index.md
+      - Key Features: "/#key-features"
+      - Quick Start: "/#quick-start"
+      - Requirements: "/#requirements"
+  - Getting Started:
+      - getting-started/index.md
+      - "Step 1: Initialize Config": "getting-started/#step-1-initialize-configuration"
+      - "Step 2: Add an LLM Profile": "getting-started/#step-2-add-an-llm-profile"
+      - "Step 3: Validate": "getting-started/#step-3-validate-configuration"
+      - "Step 4: Start Chatting": "getting-started/#step-4-start-chatting"
+      - Interactive Commands: "getting-started/#interactive-chat-commands"
+  - Installation:
+      - installation/index.md
+      - Prerequisites: "installation/#prerequisites"
+      - Building from Source: "installation/#building-from-source"
+      - Publishing a Binary: "installation/#publishing-a-self-contained-binary"
+      - Running Tests: "installation/#running-tests"
+  - Commands:
+      - commands/index.md
+      - "pga chat": "commands/#pga-chat"
+      - "pga explain": "commands/#pga-explain"
+      - "pga suggest": "commands/#pga-suggest"
+      - "pga config": "commands/#pga-config"
+      - "pga init": "commands/#pga-init"
+  - Configuration:
+      - configuration/index.md
+      - Config Formats: "configuration/#full-schema"
+      - Profiles: "configuration/#profiles"
+      - Auto-Select: "configuration/#auto-select"
+      - Tool Safety: "configuration/#tool-safety"
+      - UI Settings: "configuration/#ui-settings"
+  - Agents:
+      - agents/index.md
+      - "AGENTS.md": "agents/#agentsmd-global-instructions"
+      - Named Agents: "agents/#agent-md-named-agents"
+      - Agent Discovery: "agents/#agent-discovery"
+      - Scoped Agents: "agents/#scoped-agents"
+      - Tool Filtering: "agents/#tool-filtering"
+      - Example Agents: "agents/#example-agents"
+  - Tools:
+      - tools/index.md
+      - shell_execute: "tools/#shell_execute"
+      - file_read: "tools/#file_read"
+      - file_write: "tools/#file_write"
+      - file_edit: "tools/#file_edit"
+      - file_search: "tools/#file_search"
+      - grep_search: "tools/#grep_search"
+      - directory_list: "tools/#directory_list"
+      - git_operations: "tools/#git_operations"
+      - web_fetch: "tools/#web_fetch"
+  - LLM Providers:
+      - llm-providers/index.md
+      - Azure OpenAI: "llm-providers/#azure-openai"
+      - Azure AI Foundry: "llm-providers/#azure-ai-foundry"
+      - Ollama: "llm-providers/#ollama-local-models"
+      - Multiple Profiles: "llm-providers/#using-multiple-profiles"
+      - Troubleshooting: "llm-providers/#troubleshooting"
+  - Architecture:
+      - architecture/index.md
+      - Solution Structure: "architecture/#solution-structure"
+      - Component Architecture: "architecture/#component-architecture"
+      - Key Components: "architecture/#key-components"
+      - Data Flow: "architecture/#data-flow"
+      - Adding Tools: "architecture/#adding-a-new-tool"
+      - Adding Providers: "architecture/#adding-a-new-llm-provider"

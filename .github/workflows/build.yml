@@ -29,8 +29,10 @@ jobs:
           dotnet test --no-build --configuration Debug \
             --verbosity normal \
             --logger "trx;LogFileName=test-results.trx" \
-            --collect:"XPlatCodeCoverage" \
-            --results-directory ./TestResults
+            --results-directory ./TestResults \
+            /p:CollectCoverage=true \
+            /p:CoverletOutputFormat=cobertura \
+            /p:CoverletOutput=${{ github.workspace }}/TestResults/coverage.cobertura.xml
       - name: Write Test Summary
         if: always() && steps.test.outcome != 'skipped'
         run: |
@@ -75,8 +77,14 @@ jobs:
         if: always() && steps.test.outcome != 'skipped'
         run: |
           dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.4.1
+          COVERAGE_FILE=$(find . -name "coverage.cobertura.xml" -type f | head -1)
+          if [ -z "$COVERAGE_FILE" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ No code coverage data found" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
           reportgenerator \
-            -reports:"./TestResults/**/coverage.cobertura.xml" \
+            -reports:"$COVERAGE_FILE" \
             -targetdir:"./TestResults/CoverageReport" \
             -reporttypes:"MarkdownSummaryGithub"
 

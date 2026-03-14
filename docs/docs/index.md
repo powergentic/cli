@@ -26,6 +26,8 @@ pga config init                  # Create initial configuration
 pga init                         # Scaffold AGENTS.md and agents/ in a project
 ```
 
+![Powergentic CLI screenshot](images/pga-cli-screenshot.png)
+
 ---
 
 ## :bulb: Key Features

@@ -228,9 +228,15 @@ public class ChatOrchestratorTests : IDisposable
 
         var orchestrator = new ChatOrchestrator(configManager, _tempProjectDir);
 
+#pragma warning disable CS0219 // Variable is assigned but its value is never used
         var toolInvoked = false;
+#pragma warning restore CS0219 // Variable is assigned but its value is never used
+#pragma warning disable CS0219 // Variable is assigned but its value is never used
         var toolResultReceived = false;
+#pragma warning restore CS0219 // Variable is assigned but its value is never used
+#pragma warning disable CS0219 // Variable is assigned but its value is never used
         var streamingTokenReceived = false;
+#pragma warning restore CS0219 // Variable is assigned but its value is never used
 
         orchestrator.OnToolInvocation += (name, desc) => { toolInvoked = true; return Task.CompletedTask; };
         orchestrator.OnToolResult += (name, result) => { toolResultReceived = true; };

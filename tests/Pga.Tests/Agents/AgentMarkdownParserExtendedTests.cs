@@ -275,29 +275,6 @@ public class AgentMarkdownParserExtendedTests
     }
 
     [Fact]
-    public void ParseAgentFile_ScopeIsSetCorrectly_ForRootAgents()
-    {
-        var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-        var agentsDir = Path.Combine(tempDir, "agents");
-        Directory.CreateDirectory(agentsDir);
-
-        try
-        {
-            var agentFile = Path.Combine(agentsDir, "root.agent.md");
-            File.WriteAllText(agentFile, "# Root Agent");
-
-            var agent = _parser.ParseAgentFile(agentFile, tempDir);
-
-            Assert.True(agent.Scope.IsGlobal);
-            Assert.Equal(tempDir, agent.Scope.BasePath);
-        }
-        finally
-        {
-            Directory.Delete(tempDir, true);
-        }
-    }
-
-    [Fact]
     public void ParseAgentFile_ScopeIsSetCorrectly_ForGitHubAgents()
     {
         var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());

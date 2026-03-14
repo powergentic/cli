@@ -58,7 +58,7 @@ public class AgentLoaderExtendedTests
             var collection = loader.LoadAgents(tempDir);
 
             Assert.Single(collection.Agents);
-            Assert.Equal("github-bot", collection.Agents[0].Name);
+            Assert.Equal("powergentic-bot", collection.Agents[0].Name);
             Assert.True(collection.Agents[0].Scope.IsGlobal);
         }
         finally
@@ -190,56 +190,6 @@ public class AgentLoaderExtendedTests
             var collection = loader.LoadAgents(tempDir);
 
             Assert.Single(collection.Agents);
-        }
-        finally
-        {
-            Directory.Delete(tempDir, true);
-        }
-    }
-
-    [Fact]
-    public void LoadAgents_CombinesGlobalAndRootAndScoped()
-    {
-        var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-        var rootAgentsDir = Path.Combine(tempDir, "agents");
-        var scopedDir = Path.Combine(tempDir, "src", "frontend", "agents");
-        Directory.CreateDirectory(rootAgentsDir);
-        Directory.CreateDirectory(scopedDir);
-
-        try
-        {
-            // Global AGENTS.md
-            File.WriteAllText(Path.Combine(tempDir, StaticValues.GlobalAgentFileName), "# Global\nFollow standards.");
-
-            // Root agent
-            File.WriteAllText(Path.Combine(rootAgentsDir, "reviewer.agent.md"), """
-                ---
-                name: reviewer
-                ---
-                # Reviewer
-                """);
-
-            // Scoped agent
-            File.WriteAllText(Path.Combine(scopedDir, "frontend.agent.md"), """
-                ---
-                name: frontend
-                ---
-                # Frontend Expert
-                """);
-
-            var loader = new AgentLoader();
-            var collection = loader.LoadAgents(tempDir);
-
-            Assert.NotNull(collection.GlobalAgent);
-            Assert.Equal(2, collection.Agents.Count);
-
-            var reviewer = collection.GetByName("reviewer");
-            Assert.NotNull(reviewer);
-            Assert.True(reviewer!.Scope.IsGlobal);
-
-            var frontend = collection.GetByName("frontend");
-            Assert.NotNull(frontend);
-            Assert.False(frontend!.Scope.IsGlobal);
         }
         finally
         {

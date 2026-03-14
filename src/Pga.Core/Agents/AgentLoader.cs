@@ -84,11 +84,9 @@ public sealed class AgentLoader
                 var parentDir = Path.GetDirectoryName(agentDir) ?? string.Empty;
 
                 // Skip if parent directory is one of the default agent folders
-                foreach(var defaultFolder in StaticValues.DefaultAgentFolders)
-                {
-                    if (parentDir.Equals(Path.Combine(projectRoot, defaultFolder), StringComparison.OrdinalIgnoreCase))
-                        continue;
-                }
+                if (StaticValues.DefaultAgentFolders.Any(f =>
+                    parentDir.Equals(Path.Combine(projectRoot, f), StringComparison.OrdinalIgnoreCase)))
+                    continue;
 
                 // Skip hidden directories and common non-project directories
                 if (ShouldSkipDirectory(agentDir, projectRoot))

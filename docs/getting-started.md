@@ -4,7 +4,7 @@ This guide walks you through setting up PGA for the first time and starting your
 
 ## Step 1: Initialize Configuration
 
-PGA stores its configuration at `~/.powergentic/config.json`. Create it with:
+PGA stores its configuration at `~/.powergentic/` in JSON or YAML format. Create a default config with:
 
 ```bash
 pga config init

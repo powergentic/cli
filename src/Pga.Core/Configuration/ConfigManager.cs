@@ -4,16 +4,39 @@ namespace Pga.Core.Configuration;
 
 /// <summary>
 /// Manages reading/writing the PGA configuration.
-/// Looks for .powergentic/config.json in the project directory first,
-/// then falls back to ~/.powergentic/config.json.
+/// Supports JSON (.json) and YAML (.yaml, .yml) configuration formats.
+/// Looks for .powergentic/config.{json,yaml,yml} in the project directory first,
+/// then falls back to ~/.powergentic/config.{json,yaml,yml}.
+/// After loading the primary config file, a local override file (config.local.{json,yaml,yml})
+/// is merged on top if it exists, allowing secrets and local settings to remain out of source control.
 /// </summary>
 public sealed class ConfigManager
 {
     private readonly string? _projectPath;
+    private readonly IReadOnlyList<IConfigProvider> _providers;
+
+    /// <summary>
+    /// The base config file names to search for, in priority order.
+    /// </summary>
+    internal static readonly string[] ConfigFileNames = { "config.json", "config.yaml", "config.yml" };
+
+    /// <summary>
+    /// The local override file names to search for, in priority order.
+    /// </summary>
+    internal static readonly string[] LocalOverrideFileNames = { "config.local.json", "config.local.yaml", "config.local.yml" };
 
     public ConfigManager(string? projectPath = null)
+        : this(projectPath, new IConfigProvider[] { new JsonConfigProvider(), new YamlConfigProvider() })
+    {
+    }
+
+    /// <summary>
+    /// Creates a ConfigManager with explicit providers (useful for testing).
+    /// </summary>
+    public ConfigManager(string? projectPath, IReadOnlyList<IConfigProvider> providers)
     {
         _projectPath = projectPath;
+        _providers = providers ?? throw new ArgumentNullException(nameof(providers));
     }
 
     public static string GlobalConfigDirectory =>
@@ -23,20 +46,67 @@ public sealed class ConfigManager
         Path.Combine(GlobalConfigDirectory, "config.json");
 
     /// <summary>
-    /// Returns the local (project-level) config file path, if a project path was provided.
+    /// Returns the local (project-level) config directory path, if a project path was provided.
     /// </summary>
-    public string? LocalConfigFilePath =>
+    public string? LocalConfigDirectory =>
         _projectPath != null
-            ? Path.Combine(Path.GetFullPath(_projectPath), ".powergentic", "config.json")
+            ? Path.Combine(Path.GetFullPath(_projectPath), ".powergentic")
             : null;
 
     /// <summary>
-    /// Resolves which config file path to use: local first, then global.
+    /// Returns the local (project-level) config file path, if a project path was provided.
+    /// Searches for config.json, config.yaml, and config.yml in order.
     /// </summary>
-    public string ConfigFilePath =>
-        (LocalConfigFilePath != null && File.Exists(LocalConfigFilePath))
-            ? LocalConfigFilePath
-            : GlobalConfigFilePath;
+    public string? LocalConfigFilePath
+    {
+        get
+        {
+            if (LocalConfigDirectory == null)
+                return null;
+
+            foreach (var fileName in ConfigFileNames)
+            {
+                var path = Path.Combine(LocalConfigDirectory, fileName);
+                if (File.Exists(path))
+                    return path;
+            }
+
+            // Default to config.json if none exist (for new project initialization)
+            return Path.Combine(LocalConfigDirectory, "config.json");
+        }
+    }
+
+    /// <summary>
+    /// Resolves which config file path to use: local first, then global.
+    /// Searches for config.json, config.yaml, and config.yml in each location.
+    /// </summary>
+    public string ConfigFilePath
+    {
+        get
+        {
+            // Check local project directory first
+            if (LocalConfigDirectory != null)
+            {
+                foreach (var fileName in ConfigFileNames)
+                {
+                    var path = Path.Combine(LocalConfigDirectory, fileName);
+                    if (File.Exists(path))
+                        return path;
+                }
+            }
+
+            // Check global directory
+            foreach (var fileName in ConfigFileNames)
+            {
+                var path = Path.Combine(GlobalConfigDirectory, fileName);
+                if (File.Exists(path))
+                    return path;
+            }
+
+            // Default to global config.json if nothing exists
+            return GlobalConfigFilePath;
+        }
+    }
 
     /// <summary>
     /// Returns the directory containing the resolved config file.
@@ -44,45 +114,105 @@ public sealed class ConfigManager
     public string ConfigDirectory => Path.GetDirectoryName(ConfigFilePath)!;
 
     /// <summary>
-    /// Loads the configuration from disk, or returns a default config if none exists.
-    /// Checks the project-level .powergentic/config.json first, then ~/.powergentic/config.json.
+    /// Finds the local override file path (config.local.{json,yaml,yml}) in the same
+    /// directory as the resolved config file, if one exists.
     /// </summary>
-    public PgaConfiguration Load()
+    public string? LocalOverrideFilePath
     {
-        if (!File.Exists(ConfigFilePath))
-            return CreateDefaultConfig();
-
-        var json = File.ReadAllText(ConfigFilePath);
-        return JsonSerializer.Deserialize(json, PgaJsonContext.Default.PgaConfiguration)
-               ?? CreateDefaultConfig();
+        get
+        {
+            var dir = ConfigDirectory;
+            foreach (var fileName in LocalOverrideFileNames)
+            {
+                var path = Path.Combine(dir, fileName);
+                if (File.Exists(path))
+                    return path;
+            }
+            return null;
+        }
     }
 
     /// <summary>
-    /// Saves the configuration to disk.
+    /// Gets the appropriate <see cref="IConfigProvider"/> for the given file path based on its extension.
+    /// </summary>
+    public IConfigProvider GetProviderForFile(string filePath)
+    {
+        foreach (var provider in _providers)
+        {
+            if (provider.CanHandle(filePath))
+                return provider;
+        }
+
+        throw new NotSupportedException(
+            $"No configuration provider found for file: {filePath}. " +
+            $"Supported formats: {string.Join(", ", _providers.SelectMany(p => p.SupportedExtensions))}");
+    }
+
+    /// <summary>
+    /// Loads the configuration from disk, or returns a default config if none exists.
+    /// Checks the project-level .powergentic/ first, then ~/.powergentic/.
+    /// Supports config.json, config.yaml, and config.yml formats.
+    /// After loading the primary config, merges any config.local.{json,yaml,yml} override file found
+    /// in the same directory.
+    /// </summary>
+    public PgaConfiguration Load()
+    {
+        var configPath = ConfigFilePath;
+
+        PgaConfiguration config;
+        if (!File.Exists(configPath))
+        {
+            config = CreateDefaultConfig();
+        }
+        else
+        {
+            var provider = GetProviderForFile(configPath);
+            config = provider.Load(configPath);
+        }
+
+        // Apply local override if present
+        var overridePath = LocalOverrideFilePath;
+        if (overridePath != null && File.Exists(overridePath))
+        {
+            var overrideProvider = GetProviderForFile(overridePath);
+            var overrideConfig = overrideProvider.Load(overridePath);
+            config = ConfigMerger.Merge(config, overrideConfig);
+        }
+
+        return config;
+    }
+
+    /// <summary>
+    /// Saves the configuration to disk using the appropriate provider for the current config file format.
     /// Writes to the project-level config if it exists, otherwise to the global config.
     /// </summary>
     public void Save(PgaConfiguration config)
     {
+        var configPath = ConfigFilePath;
         Directory.CreateDirectory(ConfigDirectory);
-        var json = JsonSerializer.Serialize(config, PgaJsonContext.Default.PgaConfiguration);
-        File.WriteAllText(ConfigFilePath, json);
+        var provider = GetProviderForFile(configPath);
+        provider.Save(configPath, config);
     }
 
     /// <summary>
     /// Initializes the configuration file with defaults if it doesn't exist.
-    /// Creates at the global (~/.powergentic/) location.
+    /// Creates at the global (~/.powergentic/) location as config.json.
     /// Returns true if a new config was created.
     /// </summary>
     public bool Initialize()
     {
-        if (File.Exists(GlobalConfigFilePath))
-            return false;
+        // Check if any config file already exists in the global directory
+        foreach (var fileName in ConfigFileNames)
+        {
+            if (File.Exists(Path.Combine(GlobalConfigDirectory, fileName)))
+                return false;
+        }
 
-        // Always initialize at the global location
+        // Always initialize at the global location as JSON
         Directory.CreateDirectory(GlobalConfigDirectory);
         var config = CreateDefaultConfig();
-        var json = JsonSerializer.Serialize(config, PgaJsonContext.Default.PgaConfiguration);
-        File.WriteAllText(GlobalConfigFilePath, json);
+        var provider = GetProviderForFile(GlobalConfigFilePath);
+        provider.Save(GlobalConfigFilePath, config);
         return true;
     }
 

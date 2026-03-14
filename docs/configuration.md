@@ -1,10 +1,14 @@
 # Configuration Reference
 
-PGA stores all configuration in a single JSON file at:
+PGA stores configuration in your `.powergentic/` directory, supporting both **JSON** and **YAML** formats:
 
 ```
-~/.powergentic/config.json
+~/.powergentic/config.json      # JSON format (default)
+~/.powergentic/config.yaml      # YAML format
+~/.powergentic/config.yml       # YAML format (short extension)
 ```
+
+PGA searches for config files in this priority order: `config.json` → `config.yaml` → `config.yml`. The first file found is used.
 
 This page documents every field in the configuration file.
 
@@ -14,9 +18,67 @@ This page documents every field in the configuration file.
 pga config init
 ```
 
-Or create it manually at `~/.powergentic/config.json`.
+This creates a default `config.json` at `~/.powergentic/`. You can also create the file manually in either JSON or YAML format.
+
+## Local Override Files
+
+After loading the primary config file, PGA looks for a **local override** file in the same directory:
+
+```
+config.local.json
+config.local.yaml
+config.local.yml
+```
+
+If found, values from the local override are **merged** on top of the base configuration. This enables a powerful workflow:
+
+- **`config.yaml`** — Shared configuration checked into source control (endpoints, deployment names, structure)
+- **`config.local.yaml`** — Private overrides with secrets (API keys, tokens) excluded from source control via `.gitignore`
+
+### How Merging Works
+
+| Field | Merge Behavior |
+|---|---|
+| `profiles` | Override profiles are merged by name. New profiles are added; existing profiles have their non-null fields overridden. |
+| `defaultProfile` | Overridden if the local file specifies a non-default value |
+| `toolSafety.trustedPaths` | Lists are merged (union of both) |
+| `autoSelect.rules` | If the override has rules, they replace the base rules entirely |
+| `ui` | Individual fields are overridden |
+
+### Example: Shared Config + Local Secrets
+
+**`config.yaml`** (checked into source control):
+```yaml
+version: "1.0"
+defaultProfile: azure
+profiles:
+  azure:
+    provider: azure-openai
+    endpoint: https://my-org.openai.azure.com
+    deploymentName: gpt-4o
+    authMode: key
+  local:
+    provider: ollama
+    ollamaModel: llama3
+toolSafety:
+  mode: prompt-writes
+```
+
+**`config.local.yaml`** (in `.gitignore`, not committed):
+```yaml
+profiles:
+  azure:
+    apiKey: sk-my-secret-api-key-12345
+toolSafety:
+  trustedPaths:
+    - /Users/chris/my-project
+```
+
+The merged result will have the Azure profile with both the endpoint/deployment from the base and the API key from the local override.
 
 ## Full Schema
+
+### JSON Format
 
 ```jsonc
 {
@@ -54,6 +116,32 @@ Or create it manually at `~/.powergentic/config.json`.
     "streamResponses": true
   }
 }
+```
+
+### YAML Format
+
+```yaml
+version: "1.0"
+defaultProfile: default
+profiles:
+  default:
+    provider: azure-openai
+    displayName: My Azure GPT-4o
+    endpoint: https://my-resource.openai.azure.com
+    apiKey: sk-...
+    deploymentName: gpt-4o
+    authMode: key
+    ollamaHost: http://localhost:11434
+autoSelect:
+  enabled: false
+  rules: []
+toolSafety:
+  mode: prompt-writes
+  trustedPaths: []
+ui:
+  theme: default
+  showToolCalls: true
+  streamResponses: true
 ```
 
 ---
@@ -290,9 +378,36 @@ Which expands to:
 
 | OS | Path |
 |---|---|
-| macOS | `/Users/<username>/.powergentic/config.json` |
-| Linux | `/home/<username>/.powergentic/config.json` |
-| Windows | `C:\Users\<username>\.powergentic\config.json` |
+| macOS | `/Users/<username>/.powergentic/` |
+| Linux | `/home/<username>/.powergentic/` |
+| Windows | `C:\Users\<username>\.powergentic\` |
+
+### File Search Order
+
+PGA searches for config files in this priority order:
+
+1. **Project-level** (`.powergentic/` in the current project directory):
+   - `config.json` → `config.yaml` → `config.yml`
+2. **Global** (`~/.powergentic/`):
+   - `config.json` → `config.yaml` → `config.yml`
+
+The first file found is used as the base configuration.
+
+After loading the base config, PGA searches the **same directory** for a local override:
+- `config.local.json` → `config.local.yaml` → `config.local.yml`
+
+If found, the override values are merged on top of the base configuration.
+
+### Recommended `.gitignore` Entries
+
+To keep secrets out of source control, add these to your `.gitignore`:
+
+```gitignore
+# PGA local config (contains secrets)
+.powergentic/config.local.json
+.powergentic/config.local.yaml
+.powergentic/config.local.yml
+```
 
 ## Profile Resolution Order
 

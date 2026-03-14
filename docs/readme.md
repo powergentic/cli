@@ -11,7 +11,7 @@
 | [Getting Started](getting-started.md) | Quick start guide — first install, first chat |
 | [Installation](installation.md) | Building from source, publishing a self-contained binary |
 | [Commands](commands.md) | Full reference for every CLI command and option |
-| [Configuration](configuration.md) | Config file reference (`~/.powergentic/config.json`) |
+| [Configuration](configuration.md) | Config file reference — JSON and YAML formats, local overrides |
 | [Agents](agents.md) | Agent system — `AGENTS.md`, `*.agent.md`, scoping |
 | [Tools](tools.md) | All 9 built-in tools the AI agent can invoke |
 | [LLM Providers](llm-providers.md) | Azure OpenAI, Azure AI Foundry, and Ollama setup |

@@ -1,0 +1,13 @@
+# powergentic config.yml file
+version: 1.0
+defaultProfile: default
+profiles:
+  default:
+    provider: ollama
+    displayName: Ollama Qwen 2.5 7B
+    ollamaHost: http://localhost:11434
+    ollamaModel: qwen-2.5-7b
+
+ui:
+  showToolCalls: true
+  streamResponses: true

@@ -70,7 +70,7 @@ Inside a chat session, the following slash commands are available:
 
 ### How It Works
 
-1. PGA loads configuration from `~/.powergentic/config.json`
+1. PGA loads configuration from `~/.powergentic/config.{json,yaml,yml}` (with optional local override merging)
 2. Discovers agents from the project directory (`AGENTS.md`, `agents/*.agent.md`, etc.)
 3. Builds a system prompt from global + agent-specific instructions
 4. Creates a chat session with the resolved LLM profile
@@ -195,7 +195,7 @@ pga config <subcommand>
 
 ### `pga config init`
 
-Create the configuration file at `~/.powergentic/config.json` with default values.
+Create the configuration file at `~/.powergentic/config.json` with default values. PGA also supports `config.yaml` and `config.yml` formats — you can rename or convert the file after initialization.
 
 ```bash
 pga config init

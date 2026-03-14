@@ -1,6 +1,6 @@
 # LLM Providers
 
-PGA supports three LLM providers. Each provider is configured as a named profile in `~/.powergentic/config.json`.
+PGA supports three LLM providers. Each provider is configured as a named profile in your PGA configuration file (`config.json`, `config.yaml`, or `config.yml` in `~/.powergentic/`).
 
 ## Supported Providers
 

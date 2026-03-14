@@ -80,7 +80,7 @@ xUnit-based unit tests covering agents, configuration, and tools.
 │  ┌───────────────────┐  ┌────────────────────────────┐  │
 │  │  ConfigManager    │  │  ChatOrchestrator          │  │
 │  │  (load/save       │  │  (conversation loop,       │  │
-│  │   config.json)    │  │   tool calling,            │  │
+│  │   config files)   │  │   tool calling,            │  │
 │  │                   │  │   message history)         │  │
 │  │  PgaConfiguration │  │                            │  │
 │  │  LlmProfile       │  │                            │  │
@@ -118,9 +118,10 @@ xUnit-based unit tests covering agents, configuration, and tools.
 
 **Location:** `Pga.Core/Configuration/ConfigManager.cs`
 
-Manages the `~/.powergentic/config.json` file. Handles:
-- Loading configuration (with defaults if no file exists)
-- Saving configuration
+Manages the `~/.powergentic/` configuration files. Supports JSON (`.json`) and YAML (`.yaml`, `.yml`) formats via pluggable `IConfigProvider` implementations (`JsonConfigProvider`, `YamlConfigProvider`). Handles:
+- Loading configuration from `config.json`, `config.yaml`, or `config.yml` (with defaults if no file exists)
+- Merging local override files (`config.local.json`, `config.local.yaml`, `config.local.yml`) on top of the base config
+- Saving configuration in the same format as the source file
 - Profile CRUD operations (upsert, remove, get)
 - Profile resolution (CLI override → agent preference → auto-select → default)
 - Validation

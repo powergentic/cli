@@ -13,7 +13,7 @@ An open-source AI agent CLI tool that provides GitHub Copilot CLI-like functiona
 - 🤖 **Interactive Chat Mode** — Conversational AI assistant with full tool access
 - 💡 **Explain Command** — Get explanations for commands, errors, or concepts
 - 🔧 **Suggest Command** — Get shell command suggestions for any task
-- 📄 **AGENTS.md Support** — Define global AI instructions for your project (same format as GitHub Copilot)
+- 📄 **AGENTS.md Support** — Define global AI instructions for your project using `AGENTS.md` file (same format as GitHub Copilot)
 - 🧩 **Custom Agents** — Create specialized agents with `*.agent.md` files
 - 🔍 **Scoped Agents** — Agents that only apply within specific directories
 - 🛠️ **Built-in Tools** — File operations, shell execution, git, grep, web fetch, and more

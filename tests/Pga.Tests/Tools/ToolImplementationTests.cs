@@ -213,10 +213,15 @@ public class GitOperationsToolTests
 
 public class ShellExecuteToolTests
 {
+    private static IShellExecuteProvider CreateProvider()
+        => OperatingSystem.IsWindows()
+            ? new WindowsShellExecuteProvider()
+            : new LinuxShellExecuteProvider();
+
     [Fact]
     public void ShellExecuteTool_HasCorrectMetadata()
     {
-        var tool = new ShellExecuteTool("/tmp");
+        var tool = new ShellExecuteTool("/tmp", CreateProvider());
         Assert.Equal("shell_execute", tool.Name);
         Assert.Equal(ToolSafetyLevel.Execute, tool.SafetyLevel);
     }
@@ -224,7 +229,7 @@ public class ShellExecuteToolTests
     [Fact]
     public async Task ShellExecute_SimpleCommand_ReturnsOutput()
     {
-        var tool = new ShellExecuteTool("/tmp");
+        var tool = new ShellExecuteTool("/tmp", CreateProvider());
         var func = tool.ToAIFunction();
         var result = await func.InvokeAsync(new AIFunctionArguments(new Dictionary<string, object?>
         {
@@ -233,6 +238,150 @@ public class ShellExecuteToolTests
 
         var text = result?.ToString() ?? "";
         Assert.Contains("Exit code: 0", text);
+    }
+
+    [Fact]
+    public async Task ShellExecute_PathTraversal_IsRejected()
+    {
+        var tool = new ShellExecuteTool("/tmp", CreateProvider());
+        var func = tool.ToAIFunction();
+        var result = await func.InvokeAsync(new AIFunctionArguments(new Dictionary<string, object?>
+        {
+            ["command"] = "cat ../../etc/passwd"
+        }));
+
+        var text = result?.ToString() ?? "";
+        Assert.Contains("path traversal", text, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task ShellExecute_CdDotDot_IsRejected()
+    {
+        var tool = new ShellExecuteTool("/tmp", CreateProvider());
+        var func = tool.ToAIFunction();
+        var result = await func.InvokeAsync(new AIFunctionArguments(new Dictionary<string, object?>
+        {
+            ["command"] = "cd .. && ls"
+        }));
+
+        var text = result?.ToString() ?? "";
+        Assert.Contains("path traversal", text, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task ShellExecute_WorkingDirectoryOutsideRoot_IsRejected()
+    {
+        var rootDir = Path.Combine(Path.GetTempPath(), "pga_shell_test_" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(rootDir);
+
+        try
+        {
+            var tool = new ShellExecuteTool(rootDir, CreateProvider());
+            var func = tool.ToAIFunction();
+            var result = await func.InvokeAsync(new AIFunctionArguments(new Dictionary<string, object?>
+            {
+                ["command"] = "echo hello",
+                ["workingDirectory"] = Path.GetTempPath()
+            }));
+
+            var text = result?.ToString() ?? "";
+            Assert.Contains("must be within the project root", text);
+        }
+        finally
+        {
+            Directory.Delete(rootDir, true);
+        }
+    }
+
+    [Fact]
+    public async Task ShellExecute_SubdirectoryWorkingDirectory_IsAllowed()
+    {
+        var rootDir = Path.Combine(Path.GetTempPath(), "pga_shell_test_" + Guid.NewGuid().ToString("N"));
+        var subDir = Path.Combine(rootDir, "subdir");
+        Directory.CreateDirectory(subDir);
+
+        try
+        {
+            var tool = new ShellExecuteTool(rootDir, CreateProvider());
+            var func = tool.ToAIFunction();
+            var result = await func.InvokeAsync(new AIFunctionArguments(new Dictionary<string, object?>
+            {
+                ["command"] = "echo hello",
+                ["workingDirectory"] = subDir
+            }));
+
+            var text = result?.ToString() ?? "";
+            Assert.Contains("Exit code: 0", text);
+        }
+        finally
+        {
+            Directory.Delete(rootDir, true);
+        }
+    }
+}
+
+public class ShellExecuteProviderTests
+{
+    [Fact]
+    public void LinuxProvider_DetectsPathTraversal()
+    {
+        var provider = new LinuxShellExecuteProvider();
+
+        Assert.True(provider.ContainsPathTraversal("cat ../../etc/passwd"));
+        Assert.True(provider.ContainsPathTraversal("cd .."));
+        Assert.True(provider.ContainsPathTraversal("cd ../somewhere"));
+        Assert.True(provider.ContainsPathTraversal("ls .."));
+        Assert.False(provider.ContainsPathTraversal("echo hello"));
+        Assert.False(provider.ContainsPathTraversal("cat file.txt"));
+    }
+
+    [Fact]
+    public void WindowsProvider_DetectsPathTraversal()
+    {
+        var provider = new WindowsShellExecuteProvider();
+
+        Assert.True(provider.ContainsPathTraversal(@"type ..\..\etc\passwd"));
+        Assert.True(provider.ContainsPathTraversal("cd .."));
+        Assert.True(provider.ContainsPathTraversal("cd ../somewhere"));
+        Assert.True(provider.ContainsPathTraversal(@"cd ..\somewhere"));
+        Assert.True(provider.ContainsPathTraversal("dir .."));
+        Assert.False(provider.ContainsPathTraversal("echo hello"));
+        Assert.False(provider.ContainsPathTraversal("type file.txt"));
+    }
+
+    [Fact]
+    public void LinuxProvider_ValidatesDirectory_WithinRoot()
+    {
+        var provider = new LinuxShellExecuteProvider();
+        var root = "/home/user/project";
+
+        Assert.NotNull(provider.ResolveAndValidateDirectory("/home/user/project/src", root));
+        Assert.NotNull(provider.ResolveAndValidateDirectory(null, root));
+        Assert.Null(provider.ResolveAndValidateDirectory("/home/other", root));
+        Assert.Null(provider.ResolveAndValidateDirectory("/home/user/project/../other", root));
+    }
+
+    [Fact]
+    public void WindowsProvider_ValidatesDirectory_WithinRoot()
+    {
+        var provider = new WindowsShellExecuteProvider();
+
+        // Use temp path for a root that exists on any OS (the validation uses Path.GetFullPath)
+        var root = Path.Combine(Path.GetTempPath(), "testroot");
+        var sub = Path.Combine(root, "sub");
+
+        Assert.NotNull(provider.ResolveAndValidateDirectory(sub, root));
+        Assert.NotNull(provider.ResolveAndValidateDirectory(null, root));
+    }
+
+    [Fact]
+    public void CreatePlatformProvider_ReturnsCorrectType()
+    {
+        var provider = ShellExecuteTool.CreatePlatformProvider();
+        if (OperatingSystem.IsWindows())
+            Assert.IsType<WindowsShellExecuteProvider>(provider);
+        else
+            Assert.IsType<LinuxShellExecuteProvider>(provider);
     }
 }
 

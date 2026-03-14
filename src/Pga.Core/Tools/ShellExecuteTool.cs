@@ -5,15 +5,18 @@ using Microsoft.Extensions.AI;
 namespace Pga.Core.Tools;
 
 /// <summary>
-/// Executes shell commands in a terminal session.
+/// Executes shell commands in a terminal session, scoped to the configured working directory.
+/// Commands are prevented from escaping the allowed root via path traversal.
 /// </summary>
 public sealed class ShellExecuteTool : IAgentTool
 {
-    private readonly string _workingDirectory;
+    private readonly string _allowedRoot;
+    private readonly IShellExecuteProvider _provider;
 
-    public ShellExecuteTool(string workingDirectory)
+    public ShellExecuteTool(string workingDirectory, IShellExecuteProvider provider)
     {
-        _workingDirectory = workingDirectory;
+        _allowedRoot = Path.GetFullPath(workingDirectory);
+        _provider = provider;
     }
 
     public string Name => "shell_execute";
@@ -29,23 +32,21 @@ public sealed class ShellExecuteTool : IAgentTool
     [Description("Execute a shell command and return stdout/stderr output.")]
     private async Task<string> ExecuteAsync(
         [Description("The shell command to execute.")] string command,
-        [Description("Optional working directory. Defaults to the project root.")] string? workingDirectory = null)
+        [Description("Optional working directory (must be within the project root). Defaults to the project root.")] string? workingDirectory = null)
     {
-        var dir = workingDirectory ?? _workingDirectory;
+        // Validate the command does not contain path traversal sequences
+        if (_provider.ContainsPathTraversal(command))
+            return "Error: Command rejected — path traversal ('..') is not allowed.";
+
+        // Resolve and validate the working directory stays within the allowed root
+        var dir = _provider.ResolveAndValidateDirectory(workingDirectory, _allowedRoot);
+        if (dir is null)
+            return $"Error: Working directory must be within the project root '{_allowedRoot}'.";
 
         try
         {
             using var process = new Process();
-            process.StartInfo = new ProcessStartInfo
-            {
-                FileName = OperatingSystem.IsWindows() ? "cmd.exe" : "/bin/bash",
-                Arguments = OperatingSystem.IsWindows() ? $"/c {command}" : $"-c {command}",
-                WorkingDirectory = dir,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
+            process.StartInfo = _provider.CreateStartInfo(command, dir);
 
             process.Start();
 
@@ -73,4 +74,12 @@ public sealed class ShellExecuteTool : IAgentTool
         if (output.Length <= maxLength) return output;
         return output[..maxLength] + $"\n... (output truncated, {output.Length - maxLength} chars omitted)";
     }
+
+    /// <summary>
+    /// Creates the appropriate <see cref="IShellExecuteProvider"/> for the current platform.
+    /// </summary>
+    public static IShellExecuteProvider CreatePlatformProvider()
+        => OperatingSystem.IsWindows()
+            ? new WindowsShellExecuteProvider()
+            : new LinuxShellExecuteProvider();
 }

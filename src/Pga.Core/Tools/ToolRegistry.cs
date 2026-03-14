@@ -53,7 +53,7 @@ public sealed class ToolRegistry
     public static ToolRegistry CreateDefault(string workingDirectory)
     {
         var registry = new ToolRegistry();
-        registry.Register(new ShellExecuteTool(workingDirectory));
+        registry.Register(new ShellExecuteTool(workingDirectory, ShellExecuteTool.CreatePlatformProvider()));
         registry.Register(new FileReadTool());
         registry.Register(new FileWriteTool());
         registry.Register(new FileEditTool());

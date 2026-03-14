@@ -7,18 +7,78 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore --configuration Debug
-      - name: Test
-        run: dotnet test --no-build --configuration Debug --verbosity normal
+      - name: Test with Coverage
+        id: test
+        run: |
+          dotnet test --no-build --configuration Debug \
+            --verbosity normal \
+            --logger "trx;LogFileName=test-results.trx" \
+            --collect:"XPlatCodeCoverage" \
+            --results-directory ./TestResults
+      - name: Write Test Summary
+        if: always() && steps.test.outcome != 'skipped'
+        run: |
+          echo "## 🧪 Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          TRX_FILE=$(find ./TestResults -name "*.trx" -type f | head -1)
+          if [ -n "$TRX_FILE" ]; then
+            COUNTERS=$(grep -o '<Counters[^/]*/>' "$TRX_FILE")
+            TOTAL=$(echo "$COUNTERS" | grep -oP 'total="\K[^"]+')
+            PASSED=$(echo "$COUNTERS" | grep -oP 'passed="\K[^"]+')
+            FAILED=$(echo "$COUNTERS" | grep -oP 'failed="\K[^"]+')
+            ERRORS=$(echo "$COUNTERS" | grep -oP 'error="\K[^"]+')
+            SKIPPED=$(echo "$COUNTERS" | grep -oP 'notExecuted="\K[^"]+' || echo "0")
+            OUTCOME=$(grep -oP 'outcome="\K[^"]+' <<< "$(grep '<ResultSummary' "$TRX_FILE")")
+
+            if [ "$OUTCOME" = "Completed" ] && [ "${FAILED:-0}" = "0" ] && [ "${ERRORS:-0}" = "0" ]; then
+              echo "✅ **All $TOTAL tests passed**" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ **$FAILED of $TOTAL tests failed**" >> $GITHUB_STEP_SUMMARY
+            fi
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Passed | Failed | Errors | Skipped | Total |" >> $GITHUB_STEP_SUMMARY
+            echo "|:------:|:------:|:------:|:-------:|:-----:|" >> $GITHUB_STEP_SUMMARY
+            echo "| ✅ ${PASSED:-0} | ❌ ${FAILED:-0} | 🔥 ${ERRORS:-0} | ⏭️ ${SKIPPED:-0} | ${TOTAL:-0} |" >> $GITHUB_STEP_SUMMARY
+
+            # List any failed tests
+            FAILED_TESTS=$(grep -oP 'testName="\K[^"]+' "$TRX_FILE" | head -0 || true)
+            FAIL_BLOCK=$(grep -B1 'outcome="Failed"' "$TRX_FILE" | grep -oP 'testName="\K[^"]+' || true)
+            if [ -n "$FAIL_BLOCK" ]; then
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "### ❌ Failed Tests" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "$FAIL_BLOCK" | while read -r TEST_NAME; do
+                echo "- \`$TEST_NAME\`" >> $GITHUB_STEP_SUMMARY
+              done
+            fi
+          else
+            echo "⚠️ No test results found" >> $GITHUB_STEP_SUMMARY
+          fi
+      - name: Write Coverage Summary
+        if: always() && steps.test.outcome != 'skipped'
+        run: |
+          dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.4.1
+          reportgenerator \
+            -reports:"./TestResults/**/coverage.cobertura.xml" \
+            -targetdir:"./TestResults/CoverageReport" \
+            -reporttypes:"MarkdownSummaryGithub"
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cat ./TestResults/CoverageReport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY

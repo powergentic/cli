@@ -6,7 +6,7 @@ An open-source AI agent CLI tool that provides GitHub Copilot CLI-like functiona
 
 [![Build and Test](https://github.com/powergentic/cli/actions/workflows/build.yml/badge.svg)](https://github.com/powergentic/cli/actions/workflows/build.yml)
 
-![Powergentic CLI screenshot](docs/images/pga-cli-screenshot.png)
+![Powergentic CLI screenshot](docs/docs/images/pga-cli-screenshot.png)
 
 ## Features
 

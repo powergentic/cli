@@ -75,7 +75,7 @@ When you start a chat session (`pga chat`) from a project directory, PGA:
 
 ---
 
-## *.agent.md — Named Agents
+## *.agent.md — Named Agents { #agent-md-named-agents }
 
 Named agents are markdown files with YAML frontmatter that define specialized AI behaviors. They live in the `agents/` directory.
 

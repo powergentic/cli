@@ -23,8 +23,8 @@ dotnet --version
 Clone the repository and build:
 
 ```bash
-git clone https://github.com/powergentic/PowergenticAgent.git
-cd PowergenticAgent
+git clone https://github.com/powergentic/cli.git
+cd cli
 dotnet build
 ```
 
@@ -91,7 +91,7 @@ After publishing, copy the binary to a directory in your `PATH`:
 
     ```bash
     # In ~/.zshrc or ~/.bashrc
-    export PATH="$PATH:/path/to/PowergenticAgent/src/Pga.Cli/bin/Release/net10.0/osx-arm64/publish"
+    export PATH="$PATH:/path/to/powergentic/cli/src/Pga.Cli/bin/Release/net10.0/osx-arm64/publish"
     ```
 
 === "Windows"

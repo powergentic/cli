@@ -1,5 +1,31 @@
 {% extends "base.html" %}
 
+{% block announce %}
+  <style>
+    .md-banner {
+      background: linear-gradient(90deg, rgba(124, 58, 237, 0.15) 0%, rgba(168, 85, 247, 0.25) 50%, rgba(124, 58, 237, 0.15) 100%) !important;
+      border-bottom: 1px solid rgba(168, 85, 247, 0.3);
+      color: #d8b4fe !important;
+      font-size: 0.8rem;
+      letter-spacing: 0.3px;
+    }
+    .md-banner a {
+      color: #c084fc !important;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .md-banner a:hover {
+      color: #e9d5ff !important;
+      text-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
+    }
+    .md-banner__inner {
+      margin: 0 auto;
+    }
+  </style>
+  🚧&nbsp; <strong>Early Preview</strong> — Powergentic CLI is under active development and not yet stable. APIs, commands, and configuration may change between releases.
+  <a href="https://github.com/powergentic/cli/issues">Share feedback →</a>
+{% endblock %}
+
 {% block scripts %}
   <!-- Add scripts that need to run before here -->
   {{ super() }}

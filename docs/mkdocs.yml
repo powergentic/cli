@@ -28,24 +28,9 @@ theme:
     - toc.integrate
 
   palette:
-    - media: "(prefers-color-scheme)"
-      toggle:
-        icon: material/link
-        name: Switch to light mode
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
-      primary: deep purple
-      accent: deep purple
-      toggle:
-        icon: material/weather-sunny
-        name: Switch to dark mode
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      primary: deep purple
-      accent: purple
-      toggle:
-        icon: material/weather-night
-        name: Switch to system preference
+    scheme: slate
+    primary: custom
+    accent: custom
 
 repo_name: powergentic/cli
 repo_url: https://github.com/powergentic/cli
@@ -87,6 +72,9 @@ plugins:
   - search:
       lang:
         - en
+
+extra_css:
+  - stylesheets/extra.css
 
 extra:
   generator: false

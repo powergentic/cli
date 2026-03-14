@@ -1,0 +1,422 @@
+/* ============================================================
+   Powergentic CLI — Dark AI Theme
+   A deep, glowing purple aesthetic with futuristic AI vibes
+   ============================================================ */
+
+/* ---------- Core Color Palette ---------- */
+:root {
+  --pg-purple-deep: #1a0a2e;
+  --pg-purple-dark: #2d1b4e;
+  --pg-purple-mid: #7c3aed;
+  --pg-purple-bright: #a855f7;
+  --pg-purple-glow: #c084fc;
+  --pg-purple-neon: #d8b4fe;
+  --pg-cyan-accent: #22d3ee;
+  --pg-surface: #0f0a1a;
+  --pg-surface-raised: #1a1028;
+  --pg-text: #e8e0f0;
+  --pg-text-muted: #a897c2;
+  --pg-border-glow: rgba(168, 85, 247, 0.3);
+  --pg-glow-soft: 0 0 20px rgba(168, 85, 247, 0.15);
+  --pg-glow-medium: 0 0 30px rgba(168, 85, 247, 0.25);
+}
+
+/* ---------- Material Theme Color Overrides ---------- */
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #7c3aed;
+  --md-primary-fg-color--light: #a855f7;
+  --md-primary-fg-color--dark: #5b21b6;
+  --md-primary-bg-color: #f0e6ff;
+  --md-accent-fg-color: #a855f7;
+  --md-accent-fg-color--transparent: rgba(168, 85, 247, 0.12);
+  --md-default-bg-color: #0d0a14;
+  --md-default-bg-color--light: #151022;
+  --md-default-fg-color: #e8e0f0;
+  --md-default-fg-color--light: #c4b5d6;
+  --md-default-fg-color--lighter: #a897c2;
+  --md-default-fg-color--lightest: rgba(168, 133, 194, 0.3);
+  --md-code-bg-color: #130e20;
+  --md-code-fg-color: #d8b4fe;
+  --md-code-hl-color: rgba(168, 85, 247, 0.15);
+  --md-typeset-color: #e8e0f0;
+  --md-typeset-a-color: #a855f7;
+  --md-footer-bg-color: #0a0712;
+  --md-footer-bg-color--dark: #070510;
+}
+
+/* ---------- Body & Background ---------- */
+body {
+  background: var(--pg-surface) !important;
+}
+
+/* Subtle grid pattern overlay for AI feel */
+.md-main {
+  background:
+    linear-gradient(rgba(124, 58, 237, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 58, 237, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ---------- Header / Top Nav ---------- */
+.md-header {
+  background: linear-gradient(135deg, #0d0816 0%, #1a0e30 50%, #0d0816 100%) !important;
+  border-bottom: 1px solid var(--pg-border-glow);
+  box-shadow: 0 2px 20px rgba(124, 58, 237, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.md-header__title {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* Glowing nav tabs */
+.md-tabs {
+  background: rgba(13, 8, 22, 0.9) !important;
+  border-bottom: 1px solid rgba(124, 58, 237, 0.15);
+}
+
+.md-tabs__link {
+  color: var(--pg-text-muted) !important;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.md-tabs__link:hover,
+.md-tabs__link--active {
+  color: var(--pg-purple-glow) !important;
+}
+
+.md-tabs__link--active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--pg-purple-bright), transparent);
+  box-shadow: 0 0 10px var(--pg-purple-bright);
+}
+
+/* ---------- Sidebar Navigation ---------- */
+.md-sidebar {
+  background: rgba(10, 7, 18, 0.6);
+}
+
+.md-nav__link {
+  transition: all 0.2s ease;
+}
+
+.md-nav__link:hover {
+  color: var(--pg-purple-glow) !important;
+  padding-left: 4px;
+}
+
+.md-nav__link--active {
+  color: var(--pg-purple-bright) !important;
+  font-weight: 600;
+}
+
+/* Active nav indicator glow */
+.md-nav__item--active > .md-nav__link {
+  border-left: 2px solid var(--pg-purple-bright);
+  box-shadow: -4px 0 12px rgba(168, 85, 247, 0.3);
+}
+
+/* ---------- Content Area ---------- */
+.md-content {
+  background: transparent;
+}
+
+/* Headings with subtle glow */
+.md-typeset h1 {
+  color: #f0e6ff !important;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  text-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+}
+
+.md-typeset h2 {
+  color: #e2d5f5 !important;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+  padding-bottom: 0.4em;
+}
+
+.md-typeset h3 {
+  color: #d4c4ea !important;
+  font-weight: 600;
+}
+
+/* Links with glow on hover */
+.md-typeset a {
+  color: var(--pg-purple-bright) !important;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.md-typeset a:hover {
+  color: var(--pg-purple-neon) !important;
+  text-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
+}
+
+/* ---------- Code Blocks ---------- */
+.md-typeset code {
+  background: rgba(124, 58, 237, 0.1) !important;
+  color: var(--pg-purple-neon) !important;
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+}
+
+.md-typeset pre {
+  background: #0c0814 !important;
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: 8px;
+  box-shadow: var(--pg-glow-soft);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Top gradient line on code blocks */
+.md-typeset pre::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--pg-purple-mid), var(--pg-cyan-accent), var(--pg-purple-mid), transparent);
+  opacity: 0.7;
+}
+
+.md-typeset pre code {
+  background: transparent !important;
+  border: none;
+  color: #d4c8e8 !important;
+  padding: 0;
+}
+
+/* Code block title bar */
+.highlight .filename,
+.md-typeset .highlight > .filename {
+  background: rgba(124, 58, 237, 0.15) !important;
+  border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+  color: var(--pg-purple-glow);
+}
+
+.highlighttable .linenos {
+    padding: 0;
+}
+.highlighttable .linenodiv pre {
+    border-radius: 0 0 0 0.5em;
+    padding-left: 0.5em;
+}
+.highlighttable .code pre {
+    border-radius: 0 0 0.5em 0;
+    border-left: 0;
+    padding-left: 0.3em;
+}
+.md-typeset pre::before {
+    background: none;
+}
+
+/* ---------- Tables ---------- */
+.md-typeset table:not([class]) {
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--pg-glow-soft);
+}
+
+.md-typeset table:not([class]) th {
+  background: rgba(124, 58, 237, 0.15) !important;
+  color: var(--pg-purple-glow) !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75em;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid rgba(124, 58, 237, 0.3);
+}
+
+.md-typeset table:not([class]) td {
+  border-bottom: 1px solid rgba(124, 58, 237, 0.1);
+}
+
+.md-typeset table:not([class]) tr:hover td {
+  background: rgba(124, 58, 237, 0.05);
+}
+
+/* ---------- Admonitions ---------- */
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: 8px;
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  background: var(--pg-surface-raised) !important;
+  box-shadow: var(--pg-glow-soft);
+}
+
+.md-typeset .admonition-title,
+.md-typeset summary {
+  border-radius: 8px 8px 0 0;
+}
+
+/* Tip admonitions get a purple glow */
+.md-typeset .admonition.tip,
+.md-typeset details.tip {
+  border-color: rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
+}
+
+/* ---------- Cards / Grid ---------- */
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid.cards > ol > li {
+  background: var(--pg-surface-raised) !important;
+  border: 1px solid rgba(124, 58, 237, 0.2) !important;
+  border-radius: 12px !important;
+  transition: all 0.3s ease;
+  box-shadow: var(--pg-glow-soft);
+}
+
+.md-typeset .grid.cards > ul > li:hover,
+.md-typeset .grid.cards > ol > li:hover {
+  border-color: var(--pg-purple-bright) !important;
+  box-shadow: var(--pg-glow-medium);
+  transform: translateY(-2px);
+}
+
+/* ---------- Tabs ---------- */
+.md-typeset .tabbed-labels > label {
+  color: var(--pg-text-muted) !important;
+  transition: all 0.3s ease;
+}
+
+.md-typeset .tabbed-labels > label:hover {
+  color: var(--pg-purple-glow) !important;
+}
+
+.md-typeset .tabbed-labels > .tabbed-labels__label--active {
+  color: var(--pg-purple-bright) !important;
+}
+
+.md-typeset .tabbed-labels > label::after {
+  background: var(--pg-purple-bright) !important;
+}
+
+/* ---------- Search ---------- */
+.md-search__form {
+  background: rgba(26, 16, 40, 0.8) !important;
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.md-search__form:focus-within {
+  border-color: var(--pg-purple-bright);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+}
+
+.md-search-result__link:hover {
+  background: rgba(124, 58, 237, 0.1) !important;
+}
+
+/* ---------- Footer ---------- */
+.md-footer {
+  background: linear-gradient(180deg, #0a0712 0%, #060410 100%) !important;
+  border-top: 1px solid rgba(124, 58, 237, 0.15);
+}
+
+.md-footer-meta {
+  background: transparent !important;
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--pg-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 58, 237, 0.5);
+}
+
+/* ---------- Selection ---------- */
+::selection {
+  background: rgba(168, 85, 247, 0.3);
+  color: #fff;
+}
+
+/* ---------- Copy Button ---------- */
+.md-clipboard {
+  color: var(--pg-purple-glow) !important;
+}
+
+.md-clipboard:hover {
+  color: var(--pg-purple-neon) !important;
+}
+
+/* ---------- Back-to-Top ---------- */
+.md-top {
+  background: var(--pg-purple-mid) !important;
+  box-shadow: 0 0 15px rgba(124, 58, 237, 0.4);
+}
+
+/* ---------- Horizontal Rule ---------- */
+.md-typeset hr {
+  border-color: rgba(124, 58, 237, 0.2);
+}
+
+/* ---------- Logo Glow ---------- */
+.md-header__button.md-logo img {
+  filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.6));
+  transition: filter 0.3s ease;
+}
+
+.md-header__button.md-logo img:hover {
+  filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.9));
+}
+
+/* ---------- Primary Button ---------- */
+.md-button.md-button--primary {
+  color: var(--pg-text) !important;
+  background: var(--pg-purple-mid) !important;
+  border-color: var(--pg-purple-mid) !important;
+}
+
+.md-button.md-button--primary:hover {
+  color: var(--pg-text) !important;
+  background: var(--pg-purple-bright) !important;
+  border-color: var(--pg-purple-bright) !important;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+}
+
+/* ---------- Animated Gradient Accent (top of page) ---------- */
+.md-main::before {
+  content: '';
+  display: block;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--pg-purple-mid),
+    var(--pg-cyan-accent),
+    var(--pg-purple-mid),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: glow-sweep 40s ease-in-out infinite;
+}
+
+@keyframes glow-sweep {
+  0%, 100% { background-position: -200% 0; }
+  50% { background-position: 200% 0; }
+}

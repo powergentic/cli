@@ -38,7 +38,7 @@ public sealed class ShellExecuteTool : IAgentTool
             using var process = new Process();
             process.StartInfo = new ProcessStartInfo
             {
-                FileName = OperatingSystem.IsWindows() ? "cmd.exe" : "/bin/zsh",
+                FileName = OperatingSystem.IsWindows() ? "cmd.exe" : "/bin/bash",
                 Arguments = OperatingSystem.IsWindows() ? $"/c {command}" : $"-c {command}",
                 WorkingDirectory = dir,
                 RedirectStandardOutput = true,

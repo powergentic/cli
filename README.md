@@ -28,8 +28,7 @@ An open-source AI agent CLI tool that provides GitHub Copilot CLI-like functiona
 
 ```bash
 # Build from source
-git clone https://github.com/your-org/PowergenticAgent.git
-cd PowergenticAgent
+git clone https://github.com/powergentic/cli.git
 dotnet publish src/Pga.Cli -c Release -o ./publish
 
 # Add to PATH
@@ -128,7 +127,7 @@ PGA stores its configuration at `~/.powergentic/config.json`. This keeps your LL
 
 | Mode | Description |
 |------|-------------|
-| `key` | API key authentication (stored in config.json) |
+| `key` | API key authentication (stored in `.powergentic/config.json`) |
 | `entra` | Azure Entra ID / Azure AD authentication (uses `DefaultAzureCredential`) |
 
 ## Agent System

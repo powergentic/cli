@@ -172,24 +172,6 @@ You are an expert REST API designer. When designing APIs:
 4. Generate OpenAPI specs
 ```
 
-### Scoped Agents
-
-Place an `agents/` folder in any subdirectory to create agents that only apply within that scope:
-
-```
-project/
-├── AGENTS.md                          # Global instructions
-├── agents/
-│   └── code-reviewer.agent.md         # Global custom agent
-├── src/
-│   ├── frontend/
-│   │   └── agents/
-│   │       └── react-expert.agent.md  # Only applies in src/frontend/
-│   └── backend/
-│       └── agents/
-│           └── dotnet-expert.agent.md # Only applies in src/backend/
-```
-
 ## Built-in Tools
 
 | Tool | Safety Level | Description |

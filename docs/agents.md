@@ -166,24 +166,25 @@ Agents can be scoped to specific directories within a project. This is useful in
 
 ### Example: Monorepo with Scoped Agents
 
-```
+```text
 my-monorepo/
-├── AGENTS.md                              ← Global instructions
-├── agents/
-│   └── general-assistant.agent.md         ← Available everywhere
+├── AGENTS.md                           ← Global instructions
+├── .powergentic
+│   └── agents/
+│       └── general-assistant.agent.md  ← Available everywhere
 ├── frontend/
 │   ├── agents/
-│   │   └── react-expert.agent.md          ← Only for frontend/
+│   │   └── react-expert.agent.md       ← Only for frontend/
 │   ├── src/
 │   └── package.json
 ├── backend/
 │   ├── agents/
-│   │   └── dotnet-expert.agent.md         ← Only for backend/
+│   │   └── dotnet-expert.agent.md      ← Only for backend/
 │   ├── src/
 │   └── Backend.csproj
 └── infrastructure/
     ├── agents/
-    │   └── terraform-expert.agent.md      ← Only for infrastructure/
+    │   └── terraform-expert.agent.md   ← Only for infrastructure/
     └── main.tf
 ```
 
@@ -197,8 +198,8 @@ When PGA resolves agents for a given working path:
 
 For example, when working in `frontend/src/`:
 - ✅ `AGENTS.md` — applies (global)
-- ✅ `agents/general-assistant.agent.md` — applies (root-level)
-- ✅ `frontend/agents/react-expert.agent.md` — applies (scope matches)
+- ✅ `.powergentic/agents/general-assistant.agent.md` — applies (root-level)
+- ❌ `frontend/agents/react-expert.agent.md` — applies (scope matches)
 - ❌ `backend/agents/dotnet-expert.agent.md` — does NOT apply (different scope)
 - ❌ `infrastructure/agents/terraform-expert.agent.md` — does NOT apply (different scope)
 

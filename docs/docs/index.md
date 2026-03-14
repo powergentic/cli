@@ -9,6 +9,10 @@ description: An open-source, AI-powered coding assistant for the command line wi
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/powergentic/cli/blob/main/LICENSE)
 ![Framework: .NET 10+](https://img.shields.io/badge/framework-.NET%2010%2B-blue)
+[![Build and Test](https://github.com/powergentic/cli/actions/workflows/build.yml/badge.svg)](https://github.com/powergentic/cli/actions/workflows/build.yml)
+![Ollama: Ready](https://img.shields.io/badge/Ollama-ready-purple)
+![OpenAI: Ready](https://img.shields.io/badge/OpenAI-ready-purple)
+![Azure AI Foundry: Ready](https://img.shields.io/badge/Azure%20AI%20Foundry-ready-purple)
 
 [:octicons-rocket-24: Get Started](getting-started/index.md){ .md-button .md-button--primary }
 [:octicons-download-24: Installation](installation/index.md){ .md-button }

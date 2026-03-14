@@ -375,6 +375,40 @@ body {
   border-color: rgba(124, 58, 237, 0.2);
 }
 
+/* ---------- Images with Glow ---------- */
+.md-typeset img {
+  border-radius: 10px;
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  box-shadow:
+    0 0 20px rgba(168, 85, 247, 0.15),
+    0 0 40px rgba(124, 58, 237, 0.08);
+  transition: all 0.4s ease;
+}
+
+.md-typeset img:hover {
+  border-color: var(--pg-purple-bright);
+  box-shadow:
+    0 0 25px rgba(168, 85, 247, 0.3),
+    0 0 50px rgba(124, 58, 237, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Exclude badges and small inline images from the glow effect */
+.md-typeset img[src*="img.shields.io"],
+.md-typeset img[src*="badge"] {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  transform: none;
+}
+
+.md-typeset img[src*="img.shields.io"]:hover,
+.md-typeset img[src*="badge"]:hover {
+  border: none;
+  box-shadow: none;
+  transform: none;
+}
+
 /* ---------- Logo Glow ---------- */
 .md-header__button.md-logo img {
   filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.6));

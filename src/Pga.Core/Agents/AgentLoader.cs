@@ -1,10 +1,12 @@
+using Azure.Core;
+
 namespace Pga.Core.Agents;
 
 /// <summary>
 /// Discovers and loads agent definitions from a project directory.
 /// Follows GitHub Copilot conventions:
 ///   - AGENTS.md at root for global instructions
-///   - agents/*.agent.md for custom agents
+///   - .powergentic/agents/*.agent.md for custom agents
 ///   - .github/agents/*.agent.md (alternative location)
 ///   - Scoped agents in subdirectories (e.g., src/frontend/agents/*.agent.md)
 /// </summary>
@@ -23,13 +25,13 @@ public sealed class AgentLoader
         // 1. Load global AGENTS.md
         LoadGlobalAgent(projectRoot, collection);
 
-        // 2. Load agents from agents/ directory
-        LoadAgentsFromDirectory(Path.Combine(projectRoot, "agents"), projectRoot, collection);
+        // 2. Load agents from default agent folders
+        foreach(var folder in StaticValues.DefaultAgentFolders)
+        {
+            LoadAgentsFromDirectory(Path.Combine(projectRoot, folder, StaticValues.AgentSubfolderName), projectRoot, collection);
+        }
 
-        // 3. Load agents from .github/agents/ directory
-        LoadAgentsFromDirectory(Path.Combine(projectRoot, ".github", "agents"), projectRoot, collection);
-
-        // 4. Discover scoped agents in subdirectories
+        // 3. Discover scoped agents in subdirectories
         LoadScopedAgents(projectRoot, collection);
 
         return collection;
@@ -47,7 +49,8 @@ public sealed class AgentLoader
 
     private void LoadGlobalAgent(string projectRoot, AgentCollection collection)
     {
-        var agentsFile = Path.Combine(projectRoot, "AGENTS.md");
+        // Check for AGENTS.md at project root
+        var agentsFile = Path.Combine(projectRoot, StaticValues.GlobalAgentFileName);
         if (File.Exists(agentsFile))
         {
             var agent = _parser.ParseGlobalAgentFile(agentsFile);
@@ -60,7 +63,8 @@ public sealed class AgentLoader
         if (!Directory.Exists(agentsDir))
             return;
 
-        var agentFiles = Directory.GetFiles(agentsDir, "*.agent.md", SearchOption.TopDirectoryOnly);
+        // Load all *.agent.md files in this directory
+        var agentFiles = Directory.GetFiles(agentsDir, StaticValues.CustomAgentFilePattern, SearchOption.TopDirectoryOnly);
         foreach (var file in agentFiles)
         {
             var agent = _parser.ParseAgentFile(file, scopeBasePath);
@@ -73,22 +77,26 @@ public sealed class AgentLoader
         // Search for agents/ folders in subdirectories (for scoping)
         try
         {
-            var allAgentDirs = Directory.GetDirectories(projectRoot, "agents", SearchOption.AllDirectories);
+            var allAgentDirs = Directory.GetDirectories(projectRoot, StaticValues.AgentSubfolderName, SearchOption.AllDirectories);
             foreach (var agentDir in allAgentDirs)
             {
-                // Skip root-level agents/ and .github/agents/ (already loaded)
+                // Skip root-level default agent folders (i.e. .powergentic/agents/ and .github/agents/) - already loaded
                 var parentDir = Path.GetDirectoryName(agentDir) ?? string.Empty;
-                if (parentDir.Equals(projectRoot, StringComparison.OrdinalIgnoreCase))
-                    continue;
-                if (parentDir.Equals(Path.Combine(projectRoot, ".github"), StringComparison.OrdinalIgnoreCase))
-                    continue;
+
+                // Skip if parent directory is one of the default agent folders
+                foreach(var defaultFolder in StaticValues.DefaultAgentFolders)
+                {
+                    if (parentDir.Equals(Path.Combine(projectRoot, defaultFolder), StringComparison.OrdinalIgnoreCase))
+                        continue;
+                }
 
                 // Skip hidden directories and common non-project directories
                 if (ShouldSkipDirectory(agentDir, projectRoot))
                     continue;
 
                 var scopeBase = parentDir;
-                var agentFiles = Directory.GetFiles(agentDir, "*.agent.md", SearchOption.TopDirectoryOnly);
+                // Load agents in this directory as scoped to the parent directory
+                var agentFiles = Directory.GetFiles(agentDir, StaticValues.CustomAgentFilePattern, SearchOption.TopDirectoryOnly);
                 foreach (var file in agentFiles)
                 {
                     var agent = _parser.ParseAgentFile(file, scopeBase);
@@ -103,6 +111,12 @@ public sealed class AgentLoader
         }
     }
 
+    /// <summary>
+    /// Determines if a directory should be skipped when searching for agents.
+    /// </summary>
+    /// <param name="dir"></param>
+    /// <param name="projectRoot"></param>
+    /// <returns></returns>
     private static bool ShouldSkipDirectory(string dir, string projectRoot)
     {
         var relative = Path.GetRelativePath(projectRoot, dir);
@@ -110,8 +124,10 @@ public sealed class AgentLoader
 
         foreach (var part in parts)
         {
-            if (part.StartsWith('.') && part != ".github")
+            // Check StaticValues.DefaultAgentFolders first to avoid skipping them
+            if (part.StartsWith('.') && !StaticValues.DefaultAgentFolders.Contains(part, StringComparer.InvariantCultureIgnoreCase))
                 return true;
+
             if (part is "node_modules" or "bin" or "obj" or "dist" or "build"
                 or ".git" or "__pycache__" or "vendor" or "packages")
                 return true;

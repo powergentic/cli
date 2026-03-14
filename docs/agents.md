@@ -142,7 +142,7 @@ PGA searches for agents in these locations (in order):
 | Location | Scope |
 |---|---|
 | `AGENTS.md` | Global instructions (project root) |
-| `agents/*.agent.md` | Root-level named agents |
+| `.powergentic/agents/*.agent.md` | Root-level named agents |
 | `.github/agents/*.agent.md` | Alternative location (GitHub convention) |
 | `<subdir>/agents/*.agent.md` | Scoped agents (apply only within `<subdir>`) |
 
@@ -192,7 +192,7 @@ my-monorepo/
 When PGA resolves agents for a given working path:
 
 1. **Global agent** (`AGENTS.md`) always applies
-2. **Root-level agents** (`agents/*.agent.md`, `.github/agents/*.agent.md`) always apply
+2. **Root-level agents** (`.powergentic/agents/*.agent.md`, `.github/agents/*.agent.md`) always apply
 3. **Scoped agents** only apply if the working path is within their scope directory
 
 For example, when working in `frontend/src/`:

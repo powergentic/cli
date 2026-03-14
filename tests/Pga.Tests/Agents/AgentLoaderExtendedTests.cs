@@ -1,3 +1,4 @@
+using Pga.Core;
 using Pga.Core.Agents;
 
 namespace Pga.Tests.Agents;
@@ -20,6 +21,37 @@ public class AgentLoaderExtendedTests
                 ---
                 # GitHub Bot
                 Help with GitHub.
+                """);
+
+            var loader = new AgentLoader();
+            var collection = loader.LoadAgents(tempDir);
+
+            Assert.Single(collection.Agents);
+            Assert.Equal("github-bot", collection.Agents[0].Name);
+            Assert.True(collection.Agents[0].Scope.IsGlobal);
+        }
+        finally
+        {
+            Directory.Delete(tempDir, true);
+        }
+    }
+
+    [Fact]
+    public void LoadAgents_WithPowergenticAgentsFolder_LoadsAgents()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        var powergenticAgentsDir = Path.Combine(tempDir, ".powergentic", "agents");
+        Directory.CreateDirectory(powergenticAgentsDir);
+
+        try
+        {
+            File.WriteAllText(Path.Combine(powergenticAgentsDir, "powergentic-bot.agent.md"), """
+                ---
+                name: powergentic-bot
+                description: A Powergentic agent
+                ---
+                # Powergentic Bot
+                Help with Powergentic.
                 """);
 
             var loader = new AgentLoader();
@@ -177,7 +209,7 @@ public class AgentLoaderExtendedTests
         try
         {
             // Global AGENTS.md
-            File.WriteAllText(Path.Combine(tempDir, "AGENTS.md"), "# Global\nFollow standards.");
+            File.WriteAllText(Path.Combine(tempDir, StaticValues.GlobalAgentFileName), "# Global\nFollow standards.");
 
             // Root agent
             File.WriteAllText(Path.Combine(rootAgentsDir, "reviewer.agent.md"), """
@@ -277,7 +309,7 @@ public class AgentLoaderExtendedTests
 
         try
         {
-            File.WriteAllText(Path.Combine(tempDir, "AGENTS.md"), "# Global");
+            File.WriteAllText(Path.Combine(tempDir, StaticValues.GlobalAgentFileName), "# Global");
 
             File.WriteAllText(Path.Combine(frontendAgentsDir, "react.agent.md"), """
                 ---

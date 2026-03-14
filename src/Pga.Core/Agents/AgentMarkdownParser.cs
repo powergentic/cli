@@ -126,11 +126,18 @@ public sealed class AgentMarkdownParser
     private static bool IsRootScope(string filePath, string scopeBasePath)
     {
         var fileDir = Path.GetDirectoryName(filePath) ?? string.Empty;
-        var agentsDir = Path.Combine(scopeBasePath, "agents");
-        var dotGithubAgentsDir = Path.Combine(scopeBasePath, ".github", "agents");
+        // Consider it root scope if it's directly under the base path or in a default agent folder
+        var agentsDir = Path.Combine(scopeBasePath, StaticValues.AgentSubfolderName);
 
-        return fileDir.Equals(agentsDir, StringComparison.OrdinalIgnoreCase)
-               || fileDir.Equals(dotGithubAgentsDir, StringComparison.OrdinalIgnoreCase);
+        // Check if file is in one of the default agent folders (e.g., .powergentic/agents/)
+        foreach (var defaultFolder in StaticValues.DefaultAgentFolders)
+        {
+            var defaultAgentsDir = Path.Combine(scopeBasePath, defaultFolder, StaticValues.AgentSubfolderName);
+            if (fileDir.Equals(defaultAgentsDir, StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+
+        return false;
     }
 
     /// <summary>

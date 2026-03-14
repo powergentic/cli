@@ -1,5 +1,6 @@
 using System.CommandLine;
 using Pga.Cli.Rendering;
+using Pga.Core;
 
 namespace Pga.Cli.Commands;
 
@@ -17,7 +18,7 @@ public static class InitCommand
         };
         pathOption.Aliases.Add("-p");
 
-        var command = new Command("init", "Initialize a project with AGENTS.md and agents/ folder.")
+        var command = new Command("init", $"Initialize a project with {StaticValues.GlobalAgentFileName} and {StaticValues.AgentSubfolderName}/ folder.")
         {
             pathOption
         };
@@ -40,7 +41,7 @@ public static class InitCommand
         }
 
         // Create AGENTS.md
-        var agentsFile = Path.Combine(projectPath, "AGENTS.md");
+        var agentsFile = Path.Combine(projectPath, StaticValues.GlobalAgentFileName);
         if (!File.Exists(agentsFile))
         {
             File.WriteAllText(agentsFile, DefaultAgentsMd());
@@ -48,11 +49,11 @@ public static class InitCommand
         }
         else
         {
-            ConsoleRenderer.RenderInfo("AGENTS.md already exists, skipping.");
+            ConsoleRenderer.RenderInfo($"{StaticValues.GlobalAgentFileName} already exists, skipping.");
         }
 
         // Create agents/ directory
-        var agentsDir = Path.Combine(projectPath, "agents");
+        var agentsDir = Path.Combine(projectPath, StaticValues.AgentSubfolderName);
         if (!Directory.Exists(agentsDir))
         {
             Directory.CreateDirectory(agentsDir);

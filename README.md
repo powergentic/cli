@@ -148,7 +148,7 @@ You are working on a .NET microservices project.
 
 ### Custom Agents (*.agent.md)
 
-Create specialized agents in the `agents/` directory (or `.github/agents/`):
+Create specialized agents in the `.powergentic/agents/` directory (or `.github/agents/`):
 
 ```markdown
 ---

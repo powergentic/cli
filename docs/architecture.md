@@ -131,7 +131,7 @@ Manages the `~/.powergentic/config.json` file. Handles:
 
 Discovers and loads agent definitions from a project directory:
 1. Loads `AGENTS.md` (global instructions)
-2. Loads `agents/*.agent.md` (root-level named agents)
+2. Loads `.powergentic/agents/*.agent.md` (root-level named agents)
 3. Loads `.github/agents/*.agent.md` (GitHub convention)
 4. Recursively discovers scoped agents in subdirectories
 

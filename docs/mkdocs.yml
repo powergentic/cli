@@ -88,6 +88,7 @@ nav:
       - Key Features: "/#key-features"
       - Quick Start: "/#quick-start"
       - Requirements: "/#requirements"
+      - Disclaimer: "/#disclaimer"
   - Getting Started:
       - getting-started/index.md
       - "Step 1: Initialize Config": "/getting-started/#step-1-initialize-configuration"

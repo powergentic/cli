@@ -298,3 +298,13 @@ MIT License — see [LICENSE](LICENSE) for details.
 ## Maintained By
 
 The **Powergentic CLI**** project is maintained by [Chris Pietschmann](https://pietschsoft.com?utm_source=github&utm_medium=powergenticcli), founder of [Build5Nines](https://build5nines.com?utm_source=github&utm_medium=powergenticcli), Microsoft MVP, HashiCorp Ambassador, IBM Champion, and Microsoft Certified Trainer (MCT).
+
+## Disclaimer
+
+Powergentic CLI is experimental prerelease software and is provided "as is", without warranties of any kind.
+
+LLM output can be incorrect, incomplete, insecure, or destructive. Always review prompts, generated content, and tool actions before approval or execution.
+
+You are solely responsible for commands run, files modified, and data accessed while using this tool.
+
+Do not use Powergentic CLI in production or against sensitive systems/data unless you have appropriate safeguards, backups, and approval controls in place.

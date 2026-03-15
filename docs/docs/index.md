@@ -137,3 +137,15 @@ We welcome contributions, feedback, and new ideas. Whether it's a bug report or 
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download) or later
 - An LLM provider: Azure OpenAI, Azure AI Foundry, or [Ollama](https://ollama.com) (for local models)
+
+---
+
+## Disclaimer
+
+Powergentic CLI is experimental prerelease software and is provided "as is", without warranties of any kind.
+
+LLM output can be incorrect, incomplete, insecure, or destructive. Always review prompts, generated content, and tool actions before approval or execution.
+
+You are solely responsible for commands run, files modified, and data accessed while using this tool.
+
+Do not use Powergentic CLI in production or against sensitive systems/data unless you have appropriate safeguards, backups, and approval controls in place.
